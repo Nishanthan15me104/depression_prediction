@@ -1,3 +1,26 @@
+
+# Overview
+
+**Kaggle competion - Exploring Mental Health Data**
+
+**Datasets:** The dataset for this competition was generated from a deep learning model trained on the Depression Survey/Dataset for Analysis dataset. Feature distributions are close to, but not exactly the same, as the original.
+
+**Goal:** goal is to use data from a mental health survey to explore factors that may cause individuals to experience depression.
+
+# Tools I Used
+
+For my deep dive into the data analyst job market, I harnessed the power of several key tools:
+
+- **Python:** The backbone of my analysis, allowing me to analyze the data and find critical insights.I also used the following Python libraries:
+    - **Pandas Library:** This was used to analyze the data. 
+    - **Scikit-learn**Leveraged  for streamlined ML workflows, encompassing data preprocessing, model training, hyperparameter tuning, and performance evaluation.
+    - **Optuna** Optimized Machine learning model hyperparameters with Optuna for enhanced classification performance in a streamlined Scikit-learn pipeline.
+    - **Matplotlib Library:** I visualized the data.
+    - **Seaborn Library:** Helped me create more advanced visuals. 
+- **Jupyter Notebooks:** The tool I used to run my Python scripts which let me easily include my notes and analysis.
+- **Visual Studio Code:** My go-to for executing my Python scripts.
+- **Git & GitHub:** Essential for version control and sharing my Python code and analysis, ensuring collaboration and project tracking.
+
 # Data Loading and Exploration
 
 ## Objective
