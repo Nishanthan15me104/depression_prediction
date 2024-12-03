@@ -13,8 +13,8 @@ For my deep dive into the data analyst job market, I harnessed the power of seve
 
 - **Python:** The backbone of my analysis, allowing me to analyze the data and find critical insights.I also used the following Python libraries:
     - **Pandas Library:** This was used to analyze the data. 
-    - **Scikit-learn**Leveraged  for streamlined ML workflows, encompassing data preprocessing, model training, hyperparameter tuning, and performance evaluation.
-    - **Optuna** Optimized Machine learning model hyperparameters with Optuna for enhanced classification performance in a streamlined Scikit-learn pipeline.
+    - **Scikit-learn:**Leveraged  for streamlined ML workflows, encompassing data preprocessing, model training, hyperparameter tuning, and performance evaluation.
+    - **Optuna:** Optimized Machine learning model hyperparameters with Optuna for enhanced classification performance in a streamlined Scikit-learn pipeline.
     - **Matplotlib Library:** I visualized the data.
     - **Seaborn Library:** Helped me create more advanced visuals. 
 - **Jupyter Notebooks:** The tool I used to run my Python scripts which let me easily include my notes and analysis.
@@ -29,13 +29,6 @@ For my deep dive into the data analyst job market, I harnessed the power of seve
 - **Explore the data**:
   - Check for duplicates.
   - Describe basic statistics: number of rows, columns, data types, missing values, etc.
-
-## Tools and Libraries
-
-- **Python**: Used for data manipulation and exploration.
-- **Libraries**:
-  - **Pandas**: For data loading and processing.
-  - **NumPy**: For numerical computations.
 
 # Feature Engineering
 
@@ -110,11 +103,11 @@ For my deep dive into the data analyst job market, I harnessed the power of seve
 ### Training Transformation Pipeline
 - The `col_trans` pipeline is fitted on the training data (`X_train`).
 
-## Model Training with Hyperparameter Tuning
+## Model Training with Hyperparameter Tuning - Best Models (Xgboost and Catboost)
 
-### XGBoost Model
-- **XGBClassifier** is chosen for classification (predicting depression risk).
-- **GridSearchCV** could be used for hyperparameter tuning (commented out).
+### XGBoost Model and Catboost
+- **XGBClassifier and Catboost** is chosen for classification (predicting depression risk).
+- **GridSearchCV** could be used for hyperparameter tuning.
 
 ### Optuna for Hyperparameter Optimization
 - **optuna** library is used for hyperparameter optimization of XGBoost:
@@ -124,25 +117,44 @@ For my deep dive into the data analyst job market, I harnessed the power of seve
   - `best_params` retrieves the best hyperparameters found during optimization.
 
 ### Training the Final Model
-- **XGBClassifier** is instantiated with the best hyperparameters.
+- **XGBClassifier and Catboost** is instantiated with the best hyperparameters.
 - `Pipelinexgb` combines the feature transformation pipeline (`col_trans`) with the XGBoost model.
 - `Pipelinexgb.fit(X_train, y_train)` trains the final model on the entire training data.
 
 ## Model Evaluation and Prediction
 
-### Performance on Validation Set
-- `Pipelinexgb.score(X_valid, y_valid)` evaluates the model's **accuracy** on the validation set.
-- `Pipelinexgb.score(X_train, y_train)` evaluates the model's **accuracy** on the training set (may lead to overfitting).
+### Performance on differtent  Dataset
 
-### Prediction on Test Set
-- `Pipelinexgb.predict(X_valid)` predicts depression risk for the validation set.
-- `Pipelinexgb.predict(test_df)` predicts depression risk for the unseen test set.
+#### Catboost
+- the model's **accuracy** on the Validation set - 0.94083
+- the model's **accuracy** on the Training set   - 0.94359
+- the model's **accuracy** on the Public set     - 0.94253
+- the model's **accuracy** on the Private set    - 0.94069
 
-## Generating Submission File
-- `submission1` DataFrame stores predictions for the test set.
-- `submission1.to_csv` saves the predictions to a CSV file.
+#### Xgboost
+- the model's **accuracy** on the Validation set - 0.94033
+- the model's **accuracy** on the Training set   - 0.94345
+- the model's **accuracy** on the Public set     - 0.94211
+- the model's **accuracy** on the Private set    - 0.94032
+
 
 ## Evaluation Metrics
 - **confusion_matrix** shows the distribution of true vs. predicted labels.
+
+** Best model - Catboost** 
+[22283   744]
+[  921  4192]
+
 - **classification_report** provides various performance metrics like **precision**, **recall**, **F1-score**, and **support** for each class (**depression**, **no depression**).
+
+**Best model - Catboost**
+
+precision    recall  f1-score   support
+
+           0       0.96      0.97      0.96     
+           1       0.85      0.82      0.83    
+
+    accuracy                           0.94     
+    macro avg       0.90      0.89     0.90     
+    weighted avg    0.94      0.94     0.94     
 
