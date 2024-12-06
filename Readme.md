@@ -137,19 +137,27 @@ For my deep dive into the data analyst job market, I harnessed the power of seve
 - the model's **accuracy** on the Public set     - 0.94211
 - the model's **accuracy** on the Private set    - 0.94032
 
+#### Other model accuracy on Validation set
+
+- ensemble  model using stacking classifier(Xgboost and Logistic regression) **accuracy**    - 0.93807
+- ensemble  model using voting classifier (Xgboost and Logistic regression) **accuracy**      - 0.93792
+
+Other models like Logistic Regression, RandomForestClassifier , SVM, GradientBoostingClassifier, AdaBoostClassifier did not perform better than above models.
+
 
 ## Evaluation Metrics
 - **confusion_matrix** shows the distribution of true vs. predicted labels.
 
-** Best model - Catboost** 
-[22283   744]
-[  921  4192]
+**Best model - Catboost** 
+
+    [22283   744]
+    [  921  4192]
 
 - **classification_report** provides various performance metrics like **precision**, **recall**, **F1-score**, and **support** for each class (**depression**, **no depression**).
 
 **Best model - Catboost**
 
-precision    recall  f1-score   support
+                precision    recall  f1-score   
 
            0       0.96      0.97      0.96     
            1       0.85      0.82      0.83    
