@@ -4,7 +4,7 @@ import optuna
 import mlflow
 import mlflow.sklearn
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, f1_score, confusion_matrix
+from sklearn.metrics import classification_report, f1_score
 import src.config as config
 from src.modeling import build_pipeline
 
@@ -21,15 +21,15 @@ def main():
         X, y, test_size=0.2, stratify=y, random_state=21
     )
 
-    # --- SETUP MLFLOW ---
-    # In a real company, this URI would point to a remote server. Here, it creates a local folder.
+    # --- 1. MLFLOW CONFIGURATION ---
     mlflow.set_tracking_uri("sqlite:///mlflow.db") 
     mlflow.set_experiment("Depression_Prediction_Optuna")
 
-    # --- SETUP OPTUNA OBJECTIVE ---
+    # --- 2. OPTUNA OBJECTIVE ---
     def objective(trial):
         with mlflow.start_run(nested=True):
-            # 1. Define hyperparameters to search
+            # FIXED: Removed 'random_state' from here because build_pipeline 
+            # already adds it manually.
             params = {
                 'n_estimators': trial.suggest_int('n_estimators', 100, 800, step=100),
                 'max_depth': trial.suggest_int('max_depth', 3, 7),
@@ -38,49 +38,50 @@ def main():
                 'colsample_bytree': trial.suggest_float('colsample_bytree', 0.5, 1.0)
             }
             
-            # 2. Log parameters to MLflow
             mlflow.log_params(params)
             
-            # 3. Build and train pipeline
+            # Build and train
             pipeline = build_pipeline(xgb_params=params)
             pipeline.fit(X_train, y_train)
             
-            # 4. Predict and evaluate
             preds = pipeline.predict(X_valid)
-            score = f1_score(y_valid, preds) # Optimizing for F1-score
+            score = f1_score(y_valid, preds)
             
-            # 5. Log metric to MLflow
             mlflow.log_metric("val_f1_score", score)
-            
             return score
 
-    print("Starting Optuna Hyperparameter Tuning (10 trials)...")
-    # Start a parent MLflow run to group the Optuna trials
-    with mlflow.start_run(run_name="Optuna_Optimization"):
+    # --- 3. EXECUTE OPTUNA TUNING ---
+    # Tip: Increment the v-number if you change features or data
+    run_name = "XGBoost_Optimization_v1" 
+    
+    print(f"Starting Optuna Tuning: {run_name}")
+    with mlflow.start_run(run_name=run_name):
+        mlflow.set_tag("model_type", "XGBoost")
+        mlflow.set_tag("stage", "experimentation")
+        
         study = optuna.create_study(direction="maximize")
         study.optimize(objective, n_trials=10)
         
-        print("\nBest Trial:")
-        print(f"  F1 Score: {study.best_value}")
-        print(f"  Params: {study.best_params}")
-        
-        # Log best params to the parent run
+        print(f"\nBest Trial F1: {study.best_value}")
         mlflow.log_params({"best_" + k: v for k, v in study.best_params.items()})
 
-        # --- TRAIN FINAL MODEL WITH BEST PARAMS ---
+        # --- 4. TRAIN & REGISTER FINAL MODEL ---
         print("\nTraining final model with best parameters...")
         final_pipeline = build_pipeline(xgb_params=study.best_params)
         final_pipeline.fit(X_train, y_train)
         
-        # Evaluate Final Model
         final_preds = final_pipeline.predict(X_valid)
         print("\nFinal Classification Report:")
         print(classification_report(y_valid, final_preds))
+
+        # This automatically creates/updates the model in the "Models" tab
+        mlflow.sklearn.log_model(
+            sk_model=final_pipeline, 
+            artifact_path="model",
+            registered_model_name="Depression_Classifier_Final"
+        )
         
-        # Log the final scikit-learn pipeline artifact to MLflow
-        mlflow.sklearn.log_model(final_pipeline, "best_pipeline_model")
-        
-        # Generate Test Predictions
+        # --- 5. GENERATE SUBMISSION ---
         print("Generating predictions for test set...")
         test_preds = final_pipeline.predict(test_X)
         submission = pd.DataFrame({'id': test_df['id'], 'Depression': test_preds})
