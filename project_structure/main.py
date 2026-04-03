@@ -74,6 +74,9 @@ def main():
         print("\nFinal Classification Report:")
         print(classification_report(y_valid, final_preds))
 
+        final_f1 = f1_score(y_valid, final_preds) # Calculate the winner's score
+        mlflow.log_metric("final_test_f1", final_f1)
+
         # This automatically creates/updates the model in the "Models" tab
         mlflow.sklearn.log_model(
             sk_model=final_pipeline, 

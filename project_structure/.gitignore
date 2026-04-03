@@ -2,3 +2,13 @@ venv
 .env
 __pycache__/
 *.pyc   
+
+# MLflow tracking database
+mlflow.db
+
+# MLflow artifact storage (where models/plots are saved)
+mlruns/
+mlartifacts/
+
+# SQLite temporary files
+mlflow.db
