@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, f1_score
 import src.config as config
 from src.modeling import build_pipeline
+from src.evaluation import log_production_plots
 
 def main():
     print("Loading data...")
@@ -52,12 +53,12 @@ def main():
 
     # --- 3. EXECUTE OPTUNA TUNING ---
     # Tip: Increment the v-number if you change features or data
-    run_name = "XGBoost_Optimization_v1" 
+    run_name = "XGBoost_Optimization_v1ee1" 
     
     print(f"Starting Optuna Tuning: {run_name}")
     with mlflow.start_run(run_name=run_name):
-        mlflow.set_tag("model_type", "XGBoost")
-        mlflow.set_tag("stage", "experimentation")
+        mlflow.set_tag("model_type", "XGBoost1")
+        mlflow.set_tag("stage", "experimentation1")
         
         study = optuna.create_study(direction="maximize")
         study.optimize(objective, n_trials=10)
@@ -76,6 +77,10 @@ def main():
 
         final_f1 = f1_score(y_valid, final_preds) # Calculate the winner's score
         mlflow.log_metric("final_test_f1", final_f1)
+
+        # --- 5. PRODUCTION EVALUATION & EXPLAINABILITY ---
+        print("Generating Production-Level Visualizations...")
+        log_production_plots(final_pipeline, X_valid, y_valid)
 
         # This automatically creates/updates the model in the "Models" tab
         mlflow.sklearn.log_model(
