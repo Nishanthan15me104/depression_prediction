@@ -1,3 +1,7 @@
+"""
+Configuration module for the Depression Prediction project.
+Stores all static paths, constants, and column categorizations.
+"""
 import os
 
 # Paths

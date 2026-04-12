@@ -1,3 +1,6 @@
+"""
+Modeling module for constructing the scikit-learn machine learning pipeline.
+"""
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -7,8 +10,16 @@ from src.config import OHE_COLS, ORDINAL_COLS
 from src.preprocessing import DepressionFeatureEngineer
 
 def build_pipeline(xgb_params=None):
-    """Builds the full scikit-learn pipeline with dynamic parameters."""
+    """
+    Builds the full scikit-learn pipeline including feature engineering, 
+    encoding, and the XGBoost classifier.
     
+    Args:
+        xgb_params (dict, optional): Hyperparameters for the XGBClassifier.
+        
+    Returns:
+        Pipeline: A complete, unfitted scikit-learn pipeline.
+    """
     # 1. Encoders
     ordinal_transformer = Pipeline(steps=[
         ('impute', SimpleImputer(strategy='most_frequent')),
@@ -17,7 +28,7 @@ def build_pipeline(xgb_params=None):
     
     ohe_transformer = Pipeline(steps=[
         ('impute', SimpleImputer(strategy='most_frequent')),
-        ('ohe', OneHotEncoder(handle_unknown='ignore', sparse_output=True)) # Set to True for memory efficiency
+        ('ohe', OneHotEncoder(handle_unknown='ignore', sparse_output=True)) 
     ])
     
     # 2. Column Transformer

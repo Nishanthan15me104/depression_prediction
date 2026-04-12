@@ -1,15 +1,25 @@
+"""
+Preprocessing module containing custom scikit-learn transformers.
+"""
 import pandas as pd
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 
 class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
+    """
+    Custom transformer for cleaning text, constructing features, 
+    and applying target encoding for the depression dataset.
+    """
     def __init__(self):
-        # Store values learned from the training set to apply to the test set
+        """Initializes empty dictionaries to store learned state during the fit process."""
         self.target_encodings = {}
         self.medians = {}
         
     def fit(self, X, y=None):
-        """Learn parameters from training data to prevent data leakage."""
+        """
+        Learns parameters (medians, target encodings) from the training data 
+        to prevent data leakage into the test set.
+        """
         df = X.copy()
         if y is not None:
             df['target'] = y
@@ -28,7 +38,9 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        """Apply transformations to train or test data."""
+        """
+        Applies learned transformations and static cleaning rules to the dataset.
+        """
         df = X.copy()
         
         # 1. Target Encoding Mapping
@@ -61,9 +73,6 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
         df['Dietary Habits'] = df['Dietary Habits'].apply(lambda x: x if x in dietary_values else 'Moderate')
 
         # 4. Feature Construction (Ratios and Indices)
-        # Using qcut safely requires passing pre-calculated bins from fit(). 
-        # For brevity in this template, we construct the raw continuous features here. 
-        # In a strict pipeline, continuous binning should be handled by sklearn's KBinsDiscretizer.
         df['Pressure'] = df.apply(
             lambda row: row['Academic Pressure'] if pd.isna(row['Work Pressure']) else row['Work Pressure'], axis=1
         )
@@ -71,7 +80,7 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
             lambda row: row['Study Satisfaction'] if pd.isna(row['Job Satisfaction']) else row['Job Satisfaction'], axis=1
         )
         
-        # Fill NaNs created by formulas with -1 to keep numerical integrity for the tree model
+        # Fill NaNs created by formulas with -1 to keep numerical integrity
         cols_to_fill = ['Academic Pressure', 'Study Satisfaction', 'Work Pressure', 'Job Satisfaction']
         for col in cols_to_fill:
             if col in df.columns:
@@ -83,9 +92,10 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
         
         return df
 
-    # --- Static helper methods from your notebook ---
+    # --- Static helper methods from notebook ---
     @staticmethod
     def _clean_sleep_duration(value):
+        """Cleans and groups sleep duration text into standard bins."""
         if value in ['More than 8 hours']: return 'more than 8 hours'
         elif value in ['Less than 5 hours', '1-2 hours', '2-3 hours', '3-4 hours','4-5 hours']: return 'Less than 5 hours'
         elif value in ['5-6 hours', '4-6 hours','1-6 hours', '3-6 hours']: return '5-6 hours'
@@ -94,6 +104,7 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
 
     @staticmethod
     def _group_profession(profession):
+        """Consolidates granular job titles into broader industry sectors."""
         if pd.isna(profession) or str(profession).lower() == 'unemployed': return 'Unemployed'
         prof = str(profession).lower()
         if prof in ['it', 'software engineer', 'data scientist', 'ux/ui designer', 'digital marketer']: return 'IT'
@@ -109,6 +120,7 @@ class DepressionFeatureEngineer(BaseEstimator, TransformerMixin):
 
     @staticmethod
     def _group_degree(degree):
+        """Standardizes degree types into major educational levels."""
         if pd.isna(degree) or isinstance(degree, (int, float)): return 'Other'
         deg = str(degree)
         if deg.startswith('B'): return 'Bachelor'

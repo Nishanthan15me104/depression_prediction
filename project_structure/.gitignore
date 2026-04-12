@@ -9,6 +9,7 @@ mlflow.db
 # MLflow artifact storage (where models/plots are saved)
 mlruns/
 mlartifacts/
+plots/
 
 # SQLite temporary files
 mlflow.db

@@ -1,3 +1,6 @@
+"""
+Evaluation module for generating and logging production-level visual artifacts.
+"""
 import matplotlib.pyplot as plt
 import scikitplot as skplt
 import shap
@@ -6,7 +9,14 @@ import os
 
 def log_production_plots(model_pipeline, X_valid, y_valid, run_path="plots"):
     """
-    Generates and logs professional evaluation plots to MLflow.
+    Generates professional evaluation plots (ROC, Confusion Matrix, SHAP) 
+    and logs them directly to the MLflow artifact store.
+    
+    Args:
+        model_pipeline: The fitted scikit-learn pipeline.
+        X_valid: Validation features.
+        y_valid: Validation target variable.
+        run_path (str): Local directory to temporarily save plots before logging.
     """
     if not os.path.exists(run_path):
         os.makedirs(run_path)
@@ -25,7 +35,7 @@ def log_production_plots(model_pipeline, X_valid, y_valid, run_path="plots"):
     plt.close()
 
     # 2. SHAP Explainability (The 'Why')
-    # We extract the model and the transformed data
+    # Extract the model and the transformed data from the pipeline
     model = model_pipeline.named_steps['classifier']
     transformed_data = model_pipeline.named_steps['encoding'].transform(
         model_pipeline.named_steps['feature_engineering'].transform(X_valid)
@@ -41,5 +51,6 @@ def log_production_plots(model_pipeline, X_valid, y_valid, run_path="plots"):
     plt.close()
 
     # 3. Log everything to MLflow
+    # MLFLOW: Uploads the entire folder of images to the artifact store for this specific run
     mlflow.log_artifacts(run_path)
     print(f"Production plots logged to MLflow artifacts.")
