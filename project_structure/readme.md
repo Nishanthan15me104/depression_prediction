@@ -13,3 +13,14 @@ depression_prediction/
 ├── requirements.txt         # Dependencies
 └── main.py                  # Entry point to run the pipeline
 ```
+
+depression_prediction/
+├── src/
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── config.py       # Phase 6: Config + Env
+│   │   ├── security.py     # Phase 5: Security (AuthN/AuthZ)
+│   │   ├── schemas.py      # Phase 2: Request Validation (Pydantic)
+│   │   ├── services.py     # Phase 3 & 4: Service Layer & Async
+│   │   ├── routes.py       # Phase 1: Routing
+│   │   └── main.py         # Phase 1 & 9: Setup, Middleware, Execution
