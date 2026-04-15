@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     api_version: str = "v1.0.0"
     mlflow_tracking_uri: str = "sqlite:///mlflow.db"
     model_uri: str = "models:/Depression_Classifier_Final/latest"
-    api_key: str = "dev-secret-key-123"
+    api_key: str = "dev-secret-key-1234"
 
     class Config:
         env_file = ".env"
