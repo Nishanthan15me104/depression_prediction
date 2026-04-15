@@ -15,3 +15,6 @@ python run_api.py
 
 AND LOOK IN UI 
 http://localhost:8000/docs#
+
+click authorize and give key : 
+and save it 
