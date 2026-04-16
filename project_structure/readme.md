@@ -24,3 +24,20 @@ depression_prediction/
 │   │   ├── services.py     # Phase 3 & 4: Service Layer & Async
 │   │   ├── routes.py       # Phase 1: Routing
 │   │   └── main.py         # Phase 1 & 9: Setup, Middleware, Execution
+
+root/
+├── src/
+│   ├── api/
+│   │   ├── static_models/
+│   │   │   └── final_model.pkl  <-- Created by the script
+│   │   ├── main.py
+│   │   ├── services.py
+│   │   └── ...
+├── export_model.py              <-- Run this locally
+├── mlflow.db                    <-- Stays on your laptop
+└── requirements.txt
+
+
+challenges an problwm soling 
+use export fiel to store machine learin moel as pkl fiel and upload to fiel 
+insted of usin acr use gitub ghct to deply in acr 
