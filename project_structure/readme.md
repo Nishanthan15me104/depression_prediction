@@ -39,5 +39,7 @@ root/
 
 
 challenges an problwm soling 
-use export fiel to store machine learin moel as pkl fiel and upload to fiel 
-insted of usin acr use gitub ghct to deply in acr 
+ - use export fiel to store machine learin moel as pkl fiel and upload to fiel 
+ - insted of usin ACR(Azure) use gitub ghct to deploy in acr 
+
+ - To take the API from a local development state to a production-grade Docker container, we decoupled the service from MLflow by loading the model from a static .pkl file and implemented a manual data-mapping bridge in the routes. This ensures the raw model output is correctly wrapped into your standardized JSON schema, preventing validation errors while remaining lightweight and self-contained.
