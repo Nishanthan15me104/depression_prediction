@@ -1,0 +1,8 @@
+services:
+  depression-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=PROD  # This forces the container to use the .pkl file
+    # We don't need to mount volumes because the .pkl is already COPIED inside
