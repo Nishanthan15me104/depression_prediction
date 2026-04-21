@@ -1,6 +1,7 @@
 import mlflow
 import joblib
 import os
+import shutil
 from src.api.config import settings
 
 def promote_model():
@@ -15,20 +16,27 @@ def promote_model():
     mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
 
     try:
-        # 2. Load the best model from MLflow
-        # Note: We use the URI from your settings
-        print(f"Fetching model: {settings.model_uri}")
-        model = mlflow.pyfunc.load_model(settings.model_uri)
-
-        # 3. Save as a static pickle file
-        # We unwrap the underlying sklearn/xgboost pipeline from the MLflow wrapper
-        joblib.dump(model._model_impl, export_path)
+        # 2. THE FIX: Download the RAW artifact instead of loading it as a pyfunc
+        # MLflow stores the native model.pkl inside the 'model' directory of the run.
+        print(f"Fetching raw native model from: {settings.model_uri}")
         
-        print(f"✅ Success! Model promoted to: {export_path}")
+        # This gets the actual path to the raw pickle file MLflow stored
+        raw_model_path = mlflow.artifacts.download_artifacts(
+            artifact_uri=f"{settings.model_uri}/model.pkl"
+        )
+
+        # 3. Copy the pure file to your static folder
+        # We use shutil.copy because the file MLflow stored is already a pure pickle
+        # that was created before the MLflow wrapper was added.
+        shutil.copy(raw_model_path, export_path)
+        
+        print(f"✅ Success! Pure native model promoted to: {export_path}")
         print(f"File size: {os.path.getsize(export_path) / (1024*1024):.2f} MB")
+        print("🚀 This file is now 100% independent of MLflow.")
 
     except Exception as e:
         print(f"❌ Failed to promote model: {e}")
+        print("Hint: If 'model.pkl' is not found, check if your model was saved as 'model.joblib' or 'model.xgb'")
 
 if __name__ == "__main__":
     promote_model()
