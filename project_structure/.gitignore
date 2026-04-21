@@ -13,3 +13,5 @@ plots/
 
 # SQLite temporary files
 mlflow.db
+
+env_cloud

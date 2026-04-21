@@ -1,22 +1,14 @@
 
-
+folder structure
 ```
 depression_prediction/
 ├── data/
 │   ├── raw/                 # Put your train.csv and test.csv here
 │   └── processed/           # Save outputs/submissions here
 ├── src/
-│   ├── __init__.py
-│   ├── config.py            # Global variables and paths
-│   ├── preprocessing.py     # Custom Scikit-Learn transformers for feature engineering
-│   ├── modeling.py          # Model pipeline and evaluation
-├── requirements.txt         # Dependencies
-└── main.py                  # Entry point to run the pipeline
-```
-
-depression_prediction/
-├── src/
 │   ├── api/
+│   │   ├── static_models/
+│   │   │   └── final_model.pkl  <-- Created by the script
 │   │   ├── __init__.py
 │   │   ├── config.py       # Phase 6: Config + Env
 │   │   ├── security.py     # Phase 5: Security (AuthN/AuthZ)
@@ -24,21 +16,27 @@ depression_prediction/
 │   │   ├── services.py     # Phase 3 & 4: Service Layer & Async
 │   │   ├── routes.py       # Phase 1: Routing
 │   │   └── main.py         # Phase 1 & 9: Setup, Middleware, Execution
+│   ├── __init__.py
+│   ├── config.py            # Global variables and paths
+│   ├── preprocessing.py     # Custom Scikit-Learn transformers for feature engineering
+│   ├── modeling.py          # Model pipeline and evaluation
+├── __init__.py
+├── .dockerignore
+├── .env
+├── .gitignore
+├── comments.md
+├── docker-compose.yml
+├── Dockerfile
+├── export_model.py
+├── main.py
+├── mlflow.db
+├── requirements.txt         # Dependencies
+└── runapi.py
+```
 
-root/
-├── src/
-│   ├── api/
-│   │   ├── static_models/
-│   │   │   └── final_model.pkl  <-- Created by the script
-│   │   ├── main.py
-│   │   ├── services.py
-│   │   └── ...
-├── export_model.py              <-- Run this locally
-├── mlflow.db                    <-- Stays on your laptop
-└── requirements.txt
 
 
-challenges an problwm soling 
+challenges an problwm solving:
  - use export fiel to store machine learin moel as pkl fiel and upload to fiel 
  - insted of usin ACR(Azure) use gitub ghct to deploy in acr 
 
