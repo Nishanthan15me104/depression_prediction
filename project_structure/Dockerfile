@@ -1,30 +1,28 @@
-# 1. Use a slim Python image to keep the size small
+# 1. Use a slim Python image
 FROM python:3.10-slim
 
-# 2. Set the working directory inside the container
+# 2. Set the working directory
 WORKDIR /app
 
-# 3. Install system dependencies (needed for some ML libraries)
+# 3. Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# 4. Copy only requirements first (this leverages Docker caching)
-COPY requirements.txt .
+# 4. Copy ONLY the production requirements (Renamed as requested)
+COPY requirements-prod.txt .
 
-# 5. Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# 5. Install Python dependencies from the production file
+RUN pip install --no-cache-dir -r requirements-prod.txt
 
-# 6. Copy the entire src folder and other necessary files
-# This includes your new 'src/api/static_models/final_model.pkl'
+# 6. Copy the entire project
 COPY . .
 
 # 7. Set Environment Variables
-# This tells your Python code to use the static model, not MLflow
 ENV APP_ENV=PROD
 ENV PYTHONPATH=/app
 
-# 8. Expose the port FastAPI runs on
+# 8. Expose the port
 EXPOSE 8000
 
 # 9. Command to run the API
