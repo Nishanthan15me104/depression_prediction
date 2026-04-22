@@ -1,0 +1,22 @@
+venv/
+.env
+mlflow.db
+mlruns/
+__pycache__/
+.git/
+.github/
+data/raw/
+env_cloud
+
+<!-- # Ignore Jupyter and local workspace files -->
+juypter_files/
+.ipynb_checkpoints/
+.git
+.github
+
+<!-- # Ignore raw data (only the model .pkl should be copied) -->
+data/raw/
+data/processed/
+
+<!-- # Ignore documentation/notes -->
+comments.md

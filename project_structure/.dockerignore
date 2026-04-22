@@ -1,9 +1,0 @@
-venv/
-.env
-mlflow.db
-mlruns/
-__pycache__/
-.git/
-.github/
-data/raw/
-env_cloud
