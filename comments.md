@@ -9,11 +9,18 @@ env key : my-super-secret-production-key : use ehn runniin gin local
 ```
 [INFO] Listening at: http://127.0.0.1:5000
 
+    In the "Connection" URL box, type exactly: http://prometheus:9090
+
 
 
 3. API METRICS BY Prometheus SEE TI HERE :
 
 http://localhost:8000/metrics
+
+4. Look at Grafana
+
+
+http://localhost:3000
 ````
 
 

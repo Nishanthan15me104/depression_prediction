@@ -4,5 +4,25 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - APP_ENV=PROD  # This forces the container to use the .pkl file
+      - APP_ENV=PROD
+      - API_KEY=my-super-secret-production-key # This forces the container to use the .pkl file
     # We don't need to mount volumes because the .pkl is already COPIED inside
+  # 2. The Metrics Database
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - depression-api
+
+  # 3. The Visual Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus

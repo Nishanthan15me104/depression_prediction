@@ -2,7 +2,7 @@ import requests
 import time
 
 url = "http://127.0.0.1:8000/api/v1/predict"
-headers = {"X-API-Key": "my-super-secret-production-key"}
+headers = {"X-API-Key": "dev-secret-key-1234"}
 
 # Sample data based on your schema
 payload = {
