@@ -54,7 +54,7 @@ async def predict_depression(
 
 # NEW ROUTE: The Drift Monitoring Dashboard
 @api_router.get("/monitoring/drift", response_class=HTMLResponse, tags=["Monitoring"])
-async def get_drift_report(api_key: str = Depends(verify_api_key)):
+async def get_drift_report():
     """
     Generates an Evidently AI Data Drift report comparing the 
     last 100 API requests to the training reference data.
@@ -62,7 +62,13 @@ async def get_drift_report(api_key: str = Depends(verify_api_key)):
     try:
         # Pass the buffer from ml_service to the Evidently generator
         html_content = generate_drift_report(ml_service.prediction_buffer)
+
         return HTMLResponse(content=html_content, status_code=200)
+
     except Exception as e:
         logger.error(f"❌ Route Monitoring Error: {str(e)}")
-        raise HTTPException(status_code=500, detail="Could not generate report.")
+
+        raise HTTPException(
+            status_code=500,
+            detail="Could not generate report."
+        )
