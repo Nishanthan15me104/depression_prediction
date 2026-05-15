@@ -8,6 +8,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from src.api.schemas import DepressionPredictionInput, PredictionOutput
 from src.api.services import ml_service
 from src.api.security import verify_api_key
+from fastapi.responses import HTMLResponse # <--- NEW IMPORT
+from src.api.monitoring import generate_drift_report # <--- NEW IMPORT
 
 logger = logging.getLogger(__name__)
 api_router = APIRouter()
@@ -48,3 +50,19 @@ async def predict_depression(
             status_code=400, 
             detail=f"Data processing error: {str(e)}"
         )
+    
+
+# NEW ROUTE: The Drift Monitoring Dashboard
+@api_router.get("/monitoring/drift", response_class=HTMLResponse, tags=["Monitoring"])
+async def get_drift_report(api_key: str = Depends(verify_api_key)):
+    """
+    Generates an Evidently AI Data Drift report comparing the 
+    last 100 API requests to the training reference data.
+    """
+    try:
+        # Pass the buffer from ml_service to the Evidently generator
+        html_content = generate_drift_report(ml_service.prediction_buffer)
+        return HTMLResponse(content=html_content, status_code=200)
+    except Exception as e:
+        logger.error(f"❌ Route Monitoring Error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Could not generate report.")
