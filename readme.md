@@ -17,6 +17,8 @@ This project features:
 
 ```text
 depression_prediction/
+├── .github/workflows
+│   └── docker-publish.yml    
 ├── data/
 │   ├── raw/                       # Put train.csv and test.csv here
 │   └── processed/                 # Save outputs/submissions here
@@ -48,6 +50,7 @@ depression_prediction/
 ├── export_model.py
 ├── main.py
 ├── mlflow.db
+├── prometheus.yml
 ├── requirements-prod.txt
 └── run_api.py
 ```
